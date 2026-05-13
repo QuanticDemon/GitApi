@@ -1,6 +1,7 @@
 from flask import *
 import json
 from pathlib import Path
+import uuid 
 app = Flask(__name__)
 app.secret_key = "IZN"
 #logica de web
@@ -63,6 +64,7 @@ class Users:
     def __init__(self, username, passw):
         self.username = username 
         self.passw = passw
+        self.id = str(uuid.uuid4())
 
 def serializator(objt):
     if hasattr(objt, "__dict__"):
@@ -83,8 +85,8 @@ class JsonManager:
         try: 
             if Path(self.file).exists():
                 with open(self.file, "r", encoding="utf-8") as f:
-                    json.load(f)
-                    return []
+                    return json.load(f)
+                    
         except (json.JSONDecodeError, FileNotFoundError):
             return []
 
@@ -93,7 +95,7 @@ class JsonManager:
         usuarios = self.load()
         usuarios.append(data_user)
         with open(self.file, "w", encoding="utf-8") as f:
-            json.dump(data_user, f, indent=4, default=serializator)
+            json.dump(usuarios, f, indent=4, default=serializator)
             print(f"Guardado en '{self.file}'")
 #Logica de funcionamiento
 base_dir = Path(__file__).resolve().parent
