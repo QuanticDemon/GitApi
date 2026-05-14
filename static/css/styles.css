@@ -1,0 +1,131 @@
+*,
+*::before,
+*::after{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.indexClass{
+    background-color: rgb(231, 231, 231);
+}
+
+.formClass{
+    background-color: rgb(147, 15, 15);
+}
+
+.ops{
+    
+    background-color: red;
+    height: 30%;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    gap: 10px;
+}
+
+.ops div{
+    background-color: white;
+    width: 30%;
+    padding: 10px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+.ops div:hover{
+     background-color: rgb(255, 216, 216);
+    width: 32%;
+    padding: 12px;
+    border-radius: 10px;
+}
+.ops div a{
+    margin: auto;
+    text-decoration: none;
+    text-align: center;
+    color: black;
+    font-weight: 400;
+    transition: all 0.3s;
+}
+
+.ops div a:hover{
+    margin: auto;
+    text-decoration: none;
+    text-align: center;
+    color: rgb(255, 0, 0);
+    font-weight: 400;
+    
+}
+
+form{
+    background-color: white;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+form h2{
+    text-align: center;
+
+}
+form label{
+    width: 100%;
+}
+
+form input{
+    width: 100%;
+    border-radius: 10px;
+    background-color: beige;
+    border-style: none;
+    height: 20%;
+    padding: 10px;
+    transition: all 0.3s;
+    
+}
+
+form input::placeholder{
+    color: rgb(110, 110, 110);
+    font-weight: 600;
+}
+
+form input::placeholder:hover{
+    color: rgb(209, 209, 209);
+    font-weight: 600;
+}
+form input:hover{
+    border: 2px dotted black;
+}
+
+form button{
+    padding: 10px;
+    background-color: red;
+    color: white;
+    font-size: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+form button:hover{
+    padding: 10px;
+    background-color: rgb(127, 26, 26);
+    color: white;
+    font-size: 18px;
+    border-radius: 12px;
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    border: none;
+    cursor: pointer;
+    
+}
