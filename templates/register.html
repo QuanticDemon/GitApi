@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
-<body>
+<body class="formClass">
     <form  method="post">
+        <h2>Registrarse</h2>
         <label for="username">Name: </label>
+        <br>
         <input type="text"name="username" placeholder="Enter your name" required>
         <br>
         <label for="username">Pass: </label>
+        <br>
         <input type="password" name="password" placeholder="Enter your name" required >
         <button type="submit" >Ingresar</button>
     </form>

@@ -6,15 +6,34 @@ app = Flask(__name__)
 app.secret_key = "IZN"
 #logica de web
 
-@app.route('/home')
+@app.route('/home', methods=["GET", "POST"])
 def home():
     username = session.get("user_logged")
 
     if not username:
         return redirect(url_for("login"))
-    
 
-    return render_template("home.html", username = username)
+    mode = None
+    name = None
+    retorno = None
+    if request.method == "POST":
+        mode = request.form.get('lista')
+        name = request.form.get('username')
+
+
+        if mode == 'consult':
+            retorno = consulta(name)
+
+    return render_template("home.html", username = username, mode = mode, nameUser = name, retorno =retorno)
+
+def consulta(objetive):
+    usuario_registrados = db.load()
+
+    users_encontrado = [u for u in usuario_registrados if u['username'] == objetive]
+
+    return users_encontrado
+
+
 
 @app.route('/')
 def index():
@@ -97,6 +116,23 @@ class JsonManager:
         with open(self.file, "w", encoding="utf-8") as f:
             json.dump(usuarios, f, indent=4, default=serializator)
             print(f"Guardado en '{self.file}'")
+#Control Panel Admin
+
+def consultaUsuarios():
+    name = request.form.get("usernameAdmin")
+    usuarios_registrados = db.load()
+
+    usuarios_encontrados = [u for u in usuarios_registrados if u['username'] == name]
+
+
+    return usuarios_encontrados
+
+
+
+
+
+
+
 #Logica de funcionamiento
 base_dir = Path(__file__).resolve().parent
 

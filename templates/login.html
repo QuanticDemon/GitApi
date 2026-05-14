@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
-<body>
+<body class="formClass">
     <form action="/login" method="post">
+        <h2>Iniciar sesion</h2>
         <label for="username">Name: </label>
         <input type="text"name="username" placeholder="Enter your name" required>
         <br>

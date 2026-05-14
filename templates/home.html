@@ -10,9 +10,44 @@
         <h1>Bienvenido, {{ username }}</h1>
     </nav>
     {% if username == "Izanadmin" %}
-        <p>Admin panel</p>
+        <div class="Admin">
+            <form action="/home" method="post">
+                <label for="mode">Elige el metodo, maestro</label>
+                <select name="lista" id="mode" onchange="this.form.submit()">
+                    <option value="option0"></option>
+
+                    <option value="crear" {% if mode == "crear" %}selected{% endif %}>Crear</option>
+
+                    <option value="delete" {% if mode == "delete" %}selected{% endif %}>Eliminar</option>
+
+                    <option value="edit" {% if mode == "edit" %}selected{% endif %}>Editar</option>
+
+                    <option value="consult" {% if mode == "consult" %}selected{% endif %}>Consultar</option>
+                </select>
+            {% if mode == "consult" %}         
+                <br>
+                <label for="username">Username</label>
+                <br>
+                <input name="username" type="text" placeholder="User">
+                <button type="submit">Buscar</button>
+                {% if retorno %}
+                    <div class="Usuarios-Encontrados">
+                        {% for u in retorno %}
+                            <p>ID: {{ u.id }} | User" {{ u.username }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Usuario no encontrad</p>
+                {% endif %}
+            {% else %}
+                <p>Ok</p>
+            {% endif %}
+            </form>
+
     {% else %}
-        <p>User panel</p>
+        <div class="user">
+            <h1>User</h1>
+        </div>
     {% endif %}
     <a href="{{ url_for('index') }}">Cerrar sesion</a>
 </body>
