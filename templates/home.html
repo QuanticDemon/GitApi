@@ -24,25 +24,128 @@
 
                     <option value="consult" {% if mode == "consult" %}selected{% endif %}>Consultar</option>
                 </select>
-            {% if mode == "consult" %}         
-                <br>
-                <label for="username">Username</label>
-                <br>
-                <input name="username" type="text" placeholder="User">
-                <button type="submit">Buscar</button>
+            {% if mode == "consult" %}  
+                <form action="" method="post">
+                    <br>    
+                    <label for="username">Username</label>
+                    <br>
+                    <input name="username" type="text" placeholder="User">
+                    <button type="submit">Buscar</button>
+                </form>       
+            
                 {% if retorno %}
                     <div class="Usuarios-Encontrados">
                         {% for u in retorno %}
-                            <p>ID: {{ u.id }} | User" {{ u.username }}</p>
+                            <p>ID: {{ u.id }} | User:  {{ u.username }}</p>
                         {% endfor %}
                     </div>
                 {% else %}
                     <p>Usuario no encontrad</p>
                 {% endif %}
+            {% elif mode == 'crear' %}
+                    <form action="/home" method="post">
+                        <br>
+                        <label for="name">Ingrese el nombre: </label>
+                        <br>
+                        <input type="text" name="name" placeholder="Name" required>
+                        <br>
+                        <label for="password" required>Ingrese password: </label>
+                        <br>
+                        <input type="password" name = "password" placeholder="Name" required>
+                        <button type="submit">Crear</button>
+                    </form>
+            
+                    {% if retorno %}
+                        <div>
+                            {% for user in retorno %}
+                            <p>Usuario '{{ user.name }}' ha sido creado | Id: {{ user.id }}</p>
+                            {% endfor %}
+                        </div>
+                    
+                    {% endif %}
+            {% elif mode == 'delete'%}
+                <form action="" method="post">
+                    <input type="hidden" name="lista" values="delete">
+                    <br>
+                    <label for="username">Username</label>
+                    <br>
+                    <input name="username" type="text" placeholder="User">
+                    <button type="submit">Buscar</button>
+                
+                {% if retorno %}
+                    <div class="Usuarios-Encontrados">
+                        {% for u in retorno %}
+                            <form action="/home" method="post">
+                            <input value="{{ u.id }}" type="checkbox" name="check"><p>ID: {{ u.id }} | User:  {{ u.username }}</p>
+                            
+                        {% endfor %}
+                            <button type="submit" name="action" value="delete">Delete</button>
+                            
+                        
+                    </div>
+                </form>
+                    
+                    
+                {% endif %}
+            {% elif mode == 'edit' %}
+                <form action="" method="post">
+                        <input type="hidden" name="lista" value="edit">
+    <input type="hidden" name="editMode" value="True">
+    <input type="hidden" name="username" value="{{ nameUser }}">
+
+                    <br>
+                    <label for="username">Username</label>
+                    <br>
+                    <input name="Searchuser" type="text" placeholder="User">
+                    <button type="submit">Buscar</button>
+                     
+            
+                {% if retorno %}
+                    <div class="Usuarios-Encontrados">
+                        <input type="hidden" name="editMode" value="True">
+                        {% for u in retorno %}
+                            <input type="checkbox" name="edit" value="{{ u.id }}"><p>ID: {{ u.id }} | User:  {{ u.username }}</p>
+                        {% endfor %}
+                            <button type="submit" name="action"value="editar">Editar</button>
+                        {% if editMode == True %}
+
+                                <input 
+    type="checkbox"
+    name="checkEditName"
+    onchange="this.form.submit()"
+    {% if checkBoxName %}checked{% endif %}
+>
+                                
+                                {% if checkBoxName %}
+                                    <label for="newName">Ingrese nuevo nombre: </label>
+                                    <br>
+                                    <input type="text" name="newName" required>
+                                {% endif %}
+                                    <br>
+                                    
+                                    <input 
+    type="checkbox"
+    name="checkEditPass"
+    onchange="this.form.submit()"
+    {% if checkBoxPass %}checked{% endif %}
+>
+                                    {% if  checkBoxPass%}
+                                    
+                                    <label for="newPass">Ingrese nueva contrasenya: </label>
+                                    <br>
+                                    <input type="password" name="newPass" required>
+                                    
+                                    {%endif%}
+                                    <button type="submit" name="action" value="aplicar">Aplicar cambios</button>
+                        {% endif %}
+                    </div>
+                 </form> 
+                {% endif %}
+                
             {% else %}
                 <p>Ok</p>
             {% endif %}
-            </form>
+            
 
     {% else %}
         <div class="user">

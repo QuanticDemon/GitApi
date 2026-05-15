@@ -2,6 +2,7 @@ from flask import *
 import json
 from pathlib import Path
 import uuid 
+from abc import ABC, abstractmethod
 app = Flask(__name__)
 app.secret_key = "IZN"
 #logica de web
@@ -16,25 +17,125 @@ def home():
     mode = None
     name = None
     retorno = None
+    Cratename_user = None
+    pass_user = None
+    checkBox = []
+    action = None
+    checkBoxName = False
+    checkBoxPass =  False
+    editMode = False
+    newName = None
+    newPass = None
     if request.method == "POST":
         mode = request.form.get('lista')
-        name = request.form.get('username')
-
-
+        name = request.form.get('Searchuser')
+        Cratename_user = request.form.get('name')
+        pass_user = request.form.get('password')
+        checkBox = request.form.getlist('check')
+        action = request.form.get('action')
+        editMode = request.form.get("editMode") == "True"
+        
+        if not name:
+            name = request.form.get('username')
         if mode == 'consult':
-            retorno = consulta(name)
+            retorno = Consulta(name).consultar()
+            
+        elif mode == 'crear':
+            retorno = Crear(Cratename_user, pass_user).crear()
+            
+        elif mode == 'delete':
+            
+            retorno = Deleter(name, []).consultar()
+            
+            if action == "delete":
+                deleter = Deleter(name, checkBox)
 
-    return render_template("home.html", username = username, mode = mode, nameUser = name, retorno =retorno)
+                retorno = deleter.delete()
+        elif mode == 'edit':
+            retorno = Edition(name).consultar()
+            if request.form.get("editMode") == "True":
+                editMode = True
+            checkBoxName = request.form.get('checkEditName') is not None
+            checkBoxPass = request.form.get('checkEditPass') is not None
 
-def consulta(objetive):
-    usuario_registrados = db.load()
+            if action == "aplicar":
+                newName = request.form.get('newName')
+                newPass = request.form.get('newPass')
 
-    users_encontrado = [u for u in usuario_registrados if u['username'] == objetive]
+                editor = Edition(name)
 
-    return users_encontrado
+                retorno =editor.editar(
+                    newName if checkBoxName else None,
+                    newPass if checkBoxPass else None
+                )
 
+    return render_template("home.html", 
+                           username = username, 
+                           mode = mode, 
+                           nameUser = name, 
+                           retorno =retorno,
+                           Cratename_user = Cratename_user,
+                           editMode = editMode,
+                           checkBoxName = checkBoxName,
+                            checkBoxPass = checkBoxPass
+                           )
+#admin modes
 
+class Consulta(): 
+    def __init__(self, objetivo):
+        self.objetivo = objetivo
 
+    def consultar(self):
+        usuario_registrados = db.load()
+
+        users_encontrado = [u for u in usuario_registrados if u['username'] == self.objetivo]
+
+        return users_encontrado
+
+class Crear:
+    def __init__(self, name, password):
+        self.name = name
+        self.password = password
+    def crear(self):
+        newUser = Users(self.name, self.password)
+        db.save(newUser)
+    
+class Deleter(Consulta):
+    def __init__(self, objetivo, usersChecked):
+        super().__init__(objetivo)
+        self.usersChecked = usersChecked
+    def consultar(self):
+        return super().consultar()
+    def delete(self):
+        usuarios_registrados = db.load()
+
+        users_update = [users for users in usuarios_registrados if users['id'] not in self.usersChecked]
+
+        db.update(users_update)  
+
+        return users_update
+
+class Edition(Consulta):
+    def __init__(self, objetivo):
+        super().__init__(objetivo)
+        
+
+    def consultar(self):
+        return super().consultar()
+    
+    def editar(self, newName=None, newPass=None):
+        user_registration = db.load()
+
+        for user in user_registration:
+            if user['username'] == self.objetivo:
+                if newName:
+                    user['username'] = newName
+                if newPass:
+                    user['passw'] = newPass
+
+        db.update(user_registration)
+        return user_registration
+#endpoint api logica
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -116,6 +217,10 @@ class JsonManager:
         with open(self.file, "w", encoding="utf-8") as f:
             json.dump(usuarios, f, indent=4, default=serializator)
             print(f"Guardado en '{self.file}'")
+
+    def update(self, data_user):
+        with open(self.file, "w", encoding="utf-8") as f:
+            json.dump(data_user, f, indent=4, default=serializator)
 #Control Panel Admin
 
 def consultaUsuarios():
